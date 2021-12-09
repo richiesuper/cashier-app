@@ -75,12 +75,14 @@ void fill_receipt(FILE* rfp, char* receipt, struct Receipt rc) {
 	freopen(receipt, "ab", rfp);
 }
 
+/*
 void end_receipt(FILE* rfp, char* receipt, struct Footer footer, size_t fsize) {
 	fwrite(&footer, sizeof(char), fsize, rfp);
 	freopen(receipt, "ab", rfp);
 }
+*/
 
-void buy_product(char* catalog, char* receipt, struct Product product, struct Receipt rc, struct Footer footer) {
+void buy_product(char* catalog, char* receipt, struct Product product, struct Receipt rc) {
 	FILE* cfp = fopen(catalog, "rb+");
 	if (cfp == NULL) {
 		perror(catalog);
@@ -96,7 +98,6 @@ void buy_product(char* catalog, char* receipt, struct Product product, struct Re
 	int id;
 	size_t items;
 	size_t payout = 0;
-	size_t totalPay = 0;
 
 	printf("\nCatalog product ID's range is from 0 to 999999\nTo end input, enter any negative number when prompted for ID\n");
 
@@ -140,50 +141,40 @@ void buy_product(char* catalog, char* receipt, struct Product product, struct Re
 		strncpy(rc.name, product.name, 32);
 		rc.totalPrice = payout;
 
-		totalPay += payout;
 		payout = 0;
 
 		fill_receipt(rfp, receipt, rc);
 
 	}
 
-	snprintf(footer.msg, 150, "--------------------------------------------------\n                                                                  TOTAL: %10zu", totalPay);
 
-	size_t fsize = strlen(footer.msg);
-	end_receipt(rfp, receipt, footer, fsize);
 	fclose(cfp);
 	fclose(rfp);
 	printf("\n");
 }
 
-void print_receipt(char* receipt, struct Receipt rc, struct Footer footer) {
+void print_receipt(char* receipt, struct Receipt rc) {
+	static size_t printNum = 0;
 	FILE* rfp = fopen(receipt, "rb");
 	if (rfp == NULL) {
 		perror(receipt);
 		exit(-2);
 	}
 
-	size_t count = 0;
-
-	size_t ret = fread(&rc, sizeof(struct Receipt), 1, rfp);
-	while (ret) {
-		ret = fread(&rc, sizeof(struct Product), 1, rfp);
-		count++;
-	}
-
+	printNum++;
+	printf("Print-out #%zu:\n", printNum);
 	printf("\n%-7s%-33s%10s\n", "ID", "Product Name", "Price");
 
-	count--;
+	size_t total = 0;
+	size_t ret = fread(&rc, sizeof(struct Receipt), 1, rfp);
 	while (ret) {
-		if (count) {
-			printf("%-7zu%-33s%10zu\n", rc.id, rc.name, rc.totalPrice);
-		} else {
-			printf("%s\n", footer.msg);
-		}
-
-		ret = fread(&rc, sizeof(struct Product), 1, rfp);
+		printf("%-7zu%-33s%10zu\n", rc.id, rc.name, rc.totalPrice);
+		total += rc.totalPrice;
+		ret = fread(&rc, sizeof(struct Receipt), 1, rfp);
 	}
 
 	fclose(rfp);
+
+	printf("--------------------------------------------------\nTOTAL: %10zu\n", total);
 	printf("\n");
 }

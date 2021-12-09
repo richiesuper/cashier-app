@@ -33,8 +33,8 @@ void show_catalog(char* catalog, struct Product product);
 void modify_catalog(char* catalog, struct Product product);
 void update_catalog(FILE* cfp, struct Product product);
 void fill_receipt(FILE* rfp, char* receipt, struct Receipt rc);
-void end_receipt(FILE* rfp, char* receipt, struct Footer footer, size_t fsize);
-void buy_product(char* catalog, char* receipt, struct Product product, struct Receipt rc, struct Footer footer);
-void print_receipt(char* receipt, struct Receipt rc, struct Footer footer);
+// void end_receipt(FILE* rfp, char* receipt, struct Footer footer, size_t fsize);
+void buy_product(char* catalog, char* receipt, struct Product product, struct Receipt rc);
+void print_receipt(char* receipt, struct Receipt rc);
 
 #endif

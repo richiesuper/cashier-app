@@ -1,4 +1,4 @@
-CC=gcc
+CC=cc
 CFLAGS=-Wall -Wextra -Wshadow -Wpedantic -std=c99 -O2
 BIN=prog
 HEADER=header.h
@@ -6,7 +6,7 @@ HEADER=header.h
 all: prep $(BIN)
 
 $(BIN): main.o func.o
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ main.o func.o $(CFLAGS)
 
 %.o: %.c $(HEADER)
 	$(CC) -c -o $@ $< $(CFLAGS)
