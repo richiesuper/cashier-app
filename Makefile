@@ -13,7 +13,7 @@ $(BIN): main.o func.o
 
 prep:
 	touch catalog.dat
-	touch receipt.txt
+	touch receipt.dat
 
 clean:
 	rm -f *.o prog
