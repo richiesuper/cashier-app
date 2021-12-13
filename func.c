@@ -116,12 +116,12 @@ void buy_product(char* catalog, char* receipt, struct Product product, struct Re
 		printf("%-7zu%-33s%7zu%10zu\n", product.id, product.name, product.stock, product.price);
 
 		if (product.stock <= 0) {
-			printf("Sorry, that product is currently out of stock right now!\n\n");
+			printf("Sorry, %s is currently out of stock right now!\n\n", product.name);
 			continue;
 		}
 
 		do {
-			printf("Enter how many products you want to buy:\n> ");
+			printf("Enter how many %s you want to buy:\n> ", product.name);
 			scanf("%zu", &items);
 
 			if (items > product.stock) {
@@ -129,24 +129,26 @@ void buy_product(char* catalog, char* receipt, struct Product product, struct Re
 			}
 		} while (items > product.stock);
 
-		printf("OK, bought %zu %s which costs %zu per item.\n\n", items, product.name, product.price);
+		if (items != 0) {
+			printf("OK, bought %zu %s which costs %zu per item.\n\n", items, product.name, product.price);
 
-		product.stock -= items;
+			product.stock -= items;
 
-		update_catalog(cfp, product);
+			update_catalog(cfp, product);
 
-		payout += product.price * items;
+			payout += product.price * items;
 
-		rc.id = id;
-		strncpy(rc.name, product.name, 32);
-		rc.totalPrice = payout;
+			rc.id = id;
+			strncpy(rc.name, product.name, 32);
+			rc.totalPrice = payout;
 
-		payout = 0;
+			payout = 0;
 
-		fill_receipt(rfp, receipt, rc);
-
+			fill_receipt(rfp, receipt, rc);
+		} else {
+			printf("OK, aborting purchase!\n\n");
+		}
 	}
-
 
 	fclose(cfp);
 	fclose(rfp);
