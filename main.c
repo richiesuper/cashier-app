@@ -14,7 +14,7 @@ int main(int argc, char* argv[argc + 1]) {
 
 	struct Product product = {0};
 	struct Receipt rc = {0};
-	struct Footer footer = {0};
+	// struct Footer footer = {0};
 
 	printf("Welcome to Store Cashier Program!\n");
 
@@ -38,10 +38,10 @@ int main(int argc, char* argv[argc + 1]) {
 				modify_catalog(argv[1], product);
 				break;
 			case 3:
-				buy_product(argv[1], argv[2], product, rc, footer);
+				buy_product(argv[1], argv[2], product, rc);
 				break;
 			case 4:
-				print_receipt(argv[2], rc, footer);
+				print_receipt(argv[2], rc);
 				break;
 		}
 	}
