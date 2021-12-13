@@ -23,9 +23,11 @@ struct Receipt {
 	char name[32];
 };
 
+/*
 struct Footer {
 	char msg[150];
 };
+*/
 
 // Function Prototypes
 
