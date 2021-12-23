@@ -13,7 +13,9 @@ $(BIN): main.o func.o
 
 prep:
 	touch catalog.dat
+	touch economy.dat
 	touch receipt.dat
+	touch history.dat
 
 clean:
 	rm -f *.o prog
