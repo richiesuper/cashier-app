@@ -11,6 +11,7 @@
 struct Product {
 	size_t id;
 	size_t price;
+	size_t wholesalePrice;
 	char name[32];
 	size_t stock;
 };
