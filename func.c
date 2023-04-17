@@ -14,12 +14,12 @@ void show_catalog(char* catalog, struct Product product) {
 		exit(-2);
 	}
 
-	printf("\n\n%-7s%-33s%7s%10s\n", "ID", "Product Name", "Stock", "Price");
-	printf("---------------------------------------------------------\n");
+	printf("\n\n%-7s%-33s%7s%10s%17s\n", "ID", "Product Name", "Stock", "Price", "Wholesale Price");
+	printf("--------------------------------------------------------------------------\n");
 
 	size_t ret = fread(&product, sizeof(struct Product), 1, cfp);
 	while (ret) {
-		printf("%-7zu%-33s%7zu%10zu\n", product.id, product.name, product.stock, product.price);
+		printf("%-7zu%-33s%7zu%10zu%17zu\n", product.id, product.name, product.stock, product.price, product.wholesalePrice);
 		ret = fread(&product, sizeof(struct Product), 1, cfp);
 	}
 
@@ -41,6 +41,7 @@ void modify_catalog(char* catalog, struct Product product) {
 	printf("Product names must be between 0 and 32 characters long, inclusive\n");
 	printf("Product stocks must be between 0 and 999999, inclusive\n");
 	printf("Product prices must be between 0 and 999999999, inclusive\n\n");
+	printf("Product wholesale prices must be between 0 and 999999999, inclusive\n\n");
 
 	while (1) {
 		printf("Enter product ID:\n> ");
@@ -54,8 +55,8 @@ void modify_catalog(char* catalog, struct Product product) {
 
 		printf("Enter product name:\n> ");
 		scanf(" %[^\n]", product.name);
-		printf("Enter product stock and price:\n> ");
-		scanf("%zu %zu", &product.stock, &product.price);
+		printf("Enter product stock, price, and wholesale price:\n> ");
+		scanf("%zu %zu %zu", &product.stock, &product.price, &product.wholesalePrice);
 
 		fseek(cfp, product.id * sizeof(struct Product), SEEK_SET);
 
@@ -87,7 +88,7 @@ void finalize_catalog(char* catalog, char* economy, struct Product product) {
 	size_t capital = 0;
 	size_t ret = fread(&product, sizeof(struct Product), 1, cfp);
 	while (ret) {
-		capital += product.price * product.stock;
+		capital += product.wholesalePrice * product.stock;
 		ret = fread(&product, sizeof(struct Product), 1, cfp);
 	}
 
